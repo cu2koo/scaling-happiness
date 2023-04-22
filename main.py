@@ -47,8 +47,44 @@ def createBarChart(dest, csv, yLabel, title, name):
     plt.savefig(dest + "/" + name)
 
 
+def createBarChart2(dest, csv, yLabel, title, name):
+    df = pd.read_csv("data/" + csv, index_col="Company")
+    x = np.arange(len(df.axes[1]))
+    width = 0.1
+    _, ax = plt.subplots()
+    i = 0
+    for c in df.axes[0]:
+        ax.bar(
+            x + (-0.5 + i) * width,
+            df.values[i],
+            width,
+            label=c,
+        )
+        i += 1
+    ax.set_ylabel(yLabel, labelpad=10.0)
+    ax.set_title(title)
+    ax.set_ylim(ymin=0)
+    ax.set_xticks(x, df.axes[1])
+    ax.legend()
+    plt.savefig(dest + "/" + name)
+
+
 def createLineChart(dest, csv, yLabel, title, name):
     df = pd.read_csv("data/" + csv, index_col="Costs per Product")
+    _, ax = plt.subplots()
+    i = 0
+    for c in df.axes[0]:
+        ax.plot(df.axes[1], df.values[i], label=c)
+        i += 1
+    ax.set_ylabel(yLabel, labelpad=10.0)
+    ax.set_title(title)
+    ax.set_ylim(ymin=0)
+    ax.legend()
+    plt.savefig(dest + "/" + name)
+
+
+def createLineChart2(dest, csv, yLabel, title, name):
+    df = pd.read_csv("data/" + csv, index_col="Company")
     _, ax = plt.subplots()
     i = 0
     for c in df.axes[0]:
@@ -69,6 +105,20 @@ def createSalesGraph(dest):
         "Umsatzerlöse nach Unternehmen",
         "sales",
     )
+    createBarChart2(
+        dest,
+        "sales_to_market.csv",
+        "Umsatzerlös (MEUR)",
+        "Umsatzerlöse im Markt",
+        "sales_to_market_bar",
+    )
+    createLineChart2(
+        dest,
+        "sales_to_market.csv",
+        "Umsatzerlös (MEUR)",
+        "Umsatzerlöse im Markt",
+        "sales_to_market_line",
+    )
 
 
 def createOperatingIncomeGraph(dest):
@@ -78,6 +128,13 @@ def createOperatingIncomeGraph(dest):
         "Betriebsergebnis (MEUR)",
         "Betriebsergebnisse nach Unternehmen",
         "operating_income",
+    )
+    createLineChart2(
+        dest,
+        "operating_income_to_market.csv",
+        "Betriebsergebnis (MEUR)",
+        "Betriebsergebnisse",
+        "operating_income_to_market",
     )
 
 
@@ -96,6 +153,13 @@ def createStockPriceGraph(dest):
     ax.set_ylim(ymin=0)
     ax.legend()
     plt.savefig(dest + "/" + "stock_price")
+    createLineChart2(
+        dest,
+        "stock_price_to_market.csv",
+        "Aktienkurs (EUR / Aktie)",
+        "Aktienkurse",
+        "stock_price_to_market",
+    )
 
 
 def createSalesCategorizedGraph(dest):
